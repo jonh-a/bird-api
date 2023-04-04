@@ -41,10 +41,10 @@ async def get_bird_deets(bird, session):
                 img = 0
                 invalid_img = True
                 while img < len(all_imgs) and invalid_img is True:
-                    if "svg" in all_imgs[img] or "status" in all_imgs[img]:
+                    if "svg" in all_imgs[img] or "status" in all_imgs[img] or "wikipedia.png" in all_imgs[img]:
                         img += 1
                     else:
                         invalid_img = False
-                        img_url = "https://" + all_imgs[img].split("//")[1]
+                        img_url = "https://" + all_imgs[img].split('//')[1]
 
             return img_url

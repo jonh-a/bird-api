@@ -10,10 +10,3 @@ $ curl "{BASE_URL}:5000/random"
   "name":"flavescent warbler"
 }
 ```
-
-There is not much more to it than that. The rate limit is set a 50 requests/hour. The information is fetched from Wikipedia each request, so I'm trying not to spam their API.
-
-Some improvements to be made:
-- Cache the list of bird links so it's not getting fetched every time.
-- I don't believe this is fully asyncronous. I think there is still a blocking operation somewhere around here. It may be worthwhile to move to FastAPI.
-- See if I can extract any additional bird info from the Wikipedia API.
