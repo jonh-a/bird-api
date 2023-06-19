@@ -47,7 +47,7 @@ def _random_number(max):
     return randrange(0, max)
 
 
-async def select_bird(all_birds, session):
+async def _select_bird(all_birds, session):
     """
     takes a list of all html anchor tags, picks a random one,
     and checks that it is in fact a wikipedia article for a bird
@@ -144,7 +144,7 @@ async def get_random_bird(app, session):
             print(" + pulling birds list from cache...")
             all_birds = app.config["birds"]
 
-        selected_bird, bird_image = await select_bird(all_birds, session)
+        selected_bird, bird_image = await _select_bird(all_birds, session)
         selected_bird_parsed = urllib.parse.unquote(selected_bird).replace("_", " ").lower()
         return {"name": selected_bird_parsed, "image": bird_image}
     except Exception as e:
