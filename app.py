@@ -6,7 +6,9 @@ import os
 from flask import Flask, jsonify, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
+from pytz import timezone
 import boto3
 
 from random_bird import get_random_bird
@@ -33,7 +35,6 @@ dynamodb = boto3.client(
 )
 
 app.config["dynamodb_client"] = dynamodb
-asyncio.run(send_birds(app))
 
 limiter = Limiter(
     app,
@@ -56,6 +57,7 @@ async def random():
     try:
         async with aiohttp.ClientSession() as session:
             b = await get_random_bird(app, session)
+            await session.close()
             return jsonify(b)
     except Exception as e:
         print(e)
@@ -75,4 +77,7 @@ def rate_limit_handler(e):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(send_birds, "cron", hour=19, minute=0, timezone=timezone('UTC'), args=[app])
+    scheduler.start()
+    app.run()

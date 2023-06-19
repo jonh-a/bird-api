@@ -1,5 +1,6 @@
 import aiohttp
 
+
 async def send_message(app, to, message, url=None):
     """
     send a text through telnyx's api
@@ -26,10 +27,13 @@ async def send_message(app, to, message, url=None):
             ) as response:
                 log(f"message response: {await response.json()}")
                 if response.status == 200:
+                    await session.close()
                     return True
                 else:
                     log(f"error sending message: {response.data}")
+                    await session.close()
                     return False
+                
     except Exception as e:
         return False
 
