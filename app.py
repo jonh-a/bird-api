@@ -61,6 +61,7 @@ async def random():
         print(e)
         return jsonify({"error": "an unexpected error occurred."})
 
+
 @app.route("/webhook", methods=["POST"])
 async def webhook():
     body = request.get_json()
@@ -75,5 +76,3 @@ def rate_limit_handler(e):
 
 if __name__ == "__main__":
     app.run(debug=True)
-    
-    

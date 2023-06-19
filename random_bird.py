@@ -3,7 +3,7 @@ import datetime
 import urllib
 from bs4 import BeautifulSoup
 from constants import WIKIPEDIA_BIRDS_LIST_URL, WIKIPEDIA_BIRD_URL, WIKIPEDIA_IMAGE_BASE_URL
-
+from common import log
 
 def _should_refresh_cache(app):
     """
@@ -69,10 +69,10 @@ async def _select_bird(all_birds, session):
             test in selected_bird_title.lower() for test in invalid_article_content
         )
         selected_bird = selected_bird_title.split("/wiki/")[-1]
-        print(f" + trying bird {selected_bird}...")
+        log(f"trying bird {selected_bird}...")
         bird_image = await _get_bird_deets(selected_bird, session)
-        print(f" + image url is {bird_image}")
-    print(f" + decided on {selected_bird} - {bird_image}")
+        log(f"image url is {bird_image}")
+    log(f"decided on {selected_bird} - {bird_image}")
     return selected_bird, bird_image
 
 
@@ -128,10 +128,10 @@ async def get_random_bird(app, session):
     main function
     """
     try:
-        print("LOG: issuing bird request")
+        log("issuing bird request")
 
         if _should_refresh_cache(app) is True:
-            print(" + fetching list of birds...")
+            log("fetching list of birds...")
             unfiltered_bird_list = await _get_list_of_birds(session)
             if unfiltered_bird_list is None:
                 return {"error": "Failed to parse birds."}
@@ -141,7 +141,7 @@ async def get_random_bird(app, session):
             app.config["last_refreshed"] = datetime.datetime.now()
         
         else:
-            print(" + pulling birds list from cache...")
+            log("pulling birds list from cache...")
             all_birds = app.config["birds"]
 
         selected_bird, bird_image = await _select_bird(all_birds, session)

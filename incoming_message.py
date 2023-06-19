@@ -1,4 +1,4 @@
-from common import send_message
+from common import send_message, log
 
 def _add_number_to_db(dynamodb, number):
     try:
@@ -8,7 +8,7 @@ def _add_number_to_db(dynamodb, number):
             )
         return True
     except Exception as e:
-        print(' + failed to add item to database', e)
+        log(f"failed to add item to database: {e}")
         return False
 
 
@@ -20,7 +20,7 @@ def _remove_number_from_db(dynamodb, number):
             )
         return True
     except Exception as e:
-        print(' + failed to remove item from database', e)
+        log(f"failed to remove item from database: {e}")
         return False
 
 

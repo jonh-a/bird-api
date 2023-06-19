@@ -1,6 +1,11 @@
 import aiohttp
 
-async def send_message(app, to, message):
+async def send_message(app, to, message, url=None):
+    """
+    send a text through telnyx's api
+
+    send_message(app, "+15555555555", "test")
+    """
     try:
         async with aiohttp.ClientSession() as session:
             data = {
@@ -9,6 +14,9 @@ async def send_message(app, to, message):
                 "text": message
             }
 
+            if url is not None:
+                data["media_urls"] = [url]
+
             async with session.post(
                 "https://api.telnyx.com/v2/messages",
                 json=data,
@@ -16,11 +24,18 @@ async def send_message(app, to, message):
                     "Authorization": f"Bearer {app.config['telnyx_api_key']}"
                 }
             ) as response:
-                print(f" + message response: {await response.json()}")
+                log(f"message response: {await response.json()}")
                 if response.status == 200:
                     return True
                 else:
-                    print(response.data)
+                    log(f"error sending message: {response.data}")
                     return False
     except Exception as e:
         return False
+
+
+def log(message):
+    """
+    the most advanced python logging framework ever developed
+    """
+    print(f" + {message}")
