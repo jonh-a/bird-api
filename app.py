@@ -13,6 +13,8 @@ from random_bird import get_random_bird
 from send_birds import send_birds
 from incoming_message import incoming_message
 
+VERSION='1.0.1'
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -41,6 +43,11 @@ limiter = Limiter(
 @app.route("/health")
 def health():
     return jsonify({"status": "OK"})
+
+
+@app.route("/version")
+def version():
+    return jsonify({"version": VERSION})
 
 
 @app.route("/random")
