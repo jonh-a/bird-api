@@ -75,9 +75,9 @@ async def webhook():
 def rate_limit_handler(e):
     return jsonify({"error": "rate limit exceeded."})
 
+scheduler = BackgroundScheduler()
+scheduler.add_job(send_birds, "cron", hour=13, minute=0, timezone=timezone('UTC'), args=[app])
+scheduler.start()
 
 if __name__ == "__main__":
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(send_birds, "cron", hour=19, minute=0, timezone=timezone('UTC'), args=[app])
-    scheduler.start()
-    app.run()
+    app.run(debug=True)
