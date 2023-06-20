@@ -4,10 +4,9 @@ import aiohttp
 import asyncio
 
 
-async def _send_bird_message(app, item, session):
+async def _send_bird_message(app, item, bird):
     try:
         num = item["phone_number"]["S"]
-        bird = await get_random_bird(app, session)
         name = bird["name"]
         url = bird["image"]
         r = await send_message(app, num, name, url)
@@ -21,9 +20,10 @@ async def _bird_job(app):
         dynamodb = app.config["dynamodb_client"]
         r = dynamodb.scan(TableName="bird_bot_subscribers")
         async with aiohttp.ClientSession() as session:
+            bird = await get_random_bird(app, session)
             items = r["Items"]
             for i in items:
-                await _send_bird_message(app, i, session)
+                await _send_bird_message(app, i, bird)
             
             await session.close()
     except Exception as e:
